@@ -37,16 +37,33 @@ static NSString *CellIdentifier = @"CellIdentifier";
 @end
 
 /**
- *  Tests!
+ *  Cell Delegate
  */
-@interface JBSwipableCollectionViewCellTests : XCTestCase
 
-@property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) CellDataSource *dataSource;
+@interface CellDelegate : NSObject <JBSwipeableCollectionViewCellDelegate>
 
 @end
 
-@implementation JBSwipableCollectionViewCellTests
+@implementation CellDelegate
+
+@end
+
+/**
+ *  Tests!
+ */
+@interface JBSwipeableCollectionViewCellTests : XCTestCase
+
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) CellDataSource *dataSource;
+@property (nonatomic, strong) JBSwipeableCollectionViewCell *cell;
+
+@end
+
+@implementation JBSwipeableCollectionViewCellTests
+
+/**
+ *  Setup
+ */
 
 - (void)setUp
 {
@@ -58,23 +75,63 @@ static NSString *CellIdentifier = @"CellIdentifier";
     self.dataSource = [CellDataSource new];
     self.collectionView = viewController.collectionView;
     self.collectionView.dataSource = self.dataSource;
+    
+    CellDelegate *delegate = [CellDelegate new];
+    
+    self.cell = (JBSwipeableCollectionViewCell *)[self.dataSource collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    self.cell.delegate = delegate;
+    //need this call to the cell's delegate method for it to stick for some reason
+    NSLog(@"delegatecell: %@", self.cell.delegate);
+    //weird, test only passes if I make a call on the cell
+    [self.cell layoutIfNeeded];
 }
 
 - (void)tearDown
 {
+    self.cell = nil;
     self.dataSource = nil;
     self.collectionView.dataSource = nil;
     self.collectionView = nil;
     [super tearDown];
 }
 
+/**
+ *  Creation Tests
+ */
+
 - (void)testThatCellIsNotNil
 {
-    JBSwipeableCollectionViewCell *cell = (JBSwipeableCollectionViewCell *)[self.dataSource collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    //weird, test only passes if I make a call on the cell
-    [cell layoutIfNeeded];
-    XCTAssertNotNil(cell, @"Cell should not be nil.");
+    XCTAssertNotNil(self.cell, @"Cell should not be nil.");
 }
 
+- (void)testThatCellHasDefaultRightToLeftSwipeDirection
+{
+    XCTAssertEqual(self.cell.swipeDirection, JBSwipeDirectionRightToLeft, @"A cell should have a default swipe direction of right to left.");
+}
+
+- (void)testThatisSwipeableByDefault
+{
+    XCTAssertTrue(self.cell.isSwipeable, @"A cell should be swipeable until set otherwise.");
+}
+
+- (void)testThatABottomViewIsCreated
+{
+    XCTAssertNotNil(self.cell.bottomView, @"A cell should have a bottom view.");
+}
+
+- (void)testThatAScrollViewIsCreated
+{
+    XCTAssertNotNil(self.cell.scrollView, @"A cell should have a scrollview.");
+}
+
+- (void)testThatCellHasADelegate
+{
+    NSLog(@"cell delegate: %@", self.cell.delegate);
+    XCTAssertNotNil(self.cell.delegate, @"A cell should have a delegate.");
+}
+
+/**
+ *  Gesture Recognizer Tests
+ */
 
 @end

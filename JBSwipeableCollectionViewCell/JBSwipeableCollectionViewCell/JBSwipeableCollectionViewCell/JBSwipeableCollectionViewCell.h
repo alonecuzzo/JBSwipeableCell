@@ -6,6 +6,14 @@
 //  Copyright (c) 2014 Jabari Bell. All rights reserved.
 //
 
+
+@class JBSwipeableCollectionViewCell;
+
+@protocol JBSwipeableCollectionViewCellDelegate <NSObject>
+
+
+@end
+
 /**
  *  Allows the direction of the swipe to be set.
  */
@@ -43,13 +51,18 @@ typedef NS_ENUM(NSInteger, JBSwipeDirection){
 @property (nonatomic, assign) JBSwipeDirection swipeDirection;
 
 /**
- *  The view that is to be hidden by the scrollView on top.
+ *  The view that is to be hidden by the scrollView on top. Views should be added to it.
  */
-@property (nonatomic, strong) UIView *bottomView;
+@property (nonatomic, strong, readonly) UIView *bottomView;
 
 /**
  *  The scrollView that holds the cell's content and sits above the bottomView;
  */
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
+
+/**
+ *  Cell's delegate. It handles...
+ */
+@property (nonatomic, weak, readwrite) id <JBSwipeableCollectionViewCellDelegate> delegate;
 
 @end
