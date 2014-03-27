@@ -51,7 +51,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 /**
  *  Tests!
  */
-@interface JBSwipeableCollectionViewCellTests : XCTestCase
+@interface JBSwipeableCellTests : XCTestCase
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) CellDataSource *dataSource;
@@ -59,7 +59,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 @end
 
-@implementation JBSwipeableCollectionViewCellTests
+@implementation JBSwipeableCellTests
 
 /**
  *  Setup
